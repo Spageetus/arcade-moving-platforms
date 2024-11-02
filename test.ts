@@ -1,1 +1,2 @@
-// tests go here; this will not be compiled when this package is used as an extension.
+let p1 = MoveablePlatform.create(assets.image`platform1x1`)
+console.log(p1.kind())
