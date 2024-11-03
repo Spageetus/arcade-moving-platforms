@@ -1,29 +1,4 @@
 {
-    "image1": {
-        "data": "hwQQABAAAAAAAAAAAAAAAAAAAPAPAAAAAPD///7gRAAA/+/v7k9NAPD/Lv/k/v8A8O/yv9EuQv//4vL+3yRC/y/i8k7dJFIPL+LyTt0kUg//4vL+3yRC//Dv8r/RLkL/8P8u/+T+/wAA/+7v7k9NAADw///+4EQAAAAA8A8AAAAAAAAAAAAAAA==",
-        "mimeType": "image/x-mkcd-f4",
-        "displayName": "playerImage"
-    },
-    "image2": {
-        "data": "hwQQABAAAADMzMzMzMzMzDwzMzMzMzPDPLszMzMzu8M8uzMzMzO7wzwzMzMzMzPDPDMzMzMzM8M8MzMzMzMzwzwzMzMzMzPDPDMzMzMzM8M8MzMzMzMzwzwzMzMzMzPDPDMzMzMzM8M8uzMzMzO7wzy7MzMzM7vDPDMzMzMzM8PMzMzMzMzMzA==",
-        "mimeType": "image/x-mkcd-f4",
-        "displayName": "platform1x1"
-    },
-    "image3": {
-        "data": "hwQQABAAAACqqqqq/////6qqqqr/////qqqqqv////+qqqqq/////6qqqqr/////qqqqqv////+qqqqq/////6qqqqr//////////6qqqqr/////qqqqqv////+qqqqq/////6qqqqr/////qqqqqv////+qqqqq/////6qqqqr/////qqqqqg==",
-        "mimeType": "image/x-mkcd-f4",
-        "displayName": "missingTexture"
-    },
-    "image4": {
-        "data": "hwQgABAAAAC7u7u7u7u7uzszMzMzMzOzO7szMzMzu7M7uzMzMzO7szszMzMzMzOzOzMzMzMzM7M7MzMzMzMzszszMzMzMzOzOzMzMzMzM7M7MzMzMzMzszszMzMzMzOzOzMzMzMzM7M7MzMzMzMzszszMzMzMzOzOzMzMzMzM7M7MzMzMzMzszszMzMzMzOzOzMzMzMzM7M7MzMzMzMzszszMzMzMzOzOzMzMzMzM7M7MzMzMzMzszszMzMzMzOzOzMzMzMzM7M7MzMzMzMzszszMzMzMzOzOzMzMzMzM7M7MzMzMzMzszu7MzMzM7uzO7szMzMzu7M7MzMzMzMzs7u7u7u7u7u7",
-        "mimeType": "image/x-mkcd-f4",
-        "displayName": "platform2x1"
-    },
-    "image5": {
-        "data": "hwQQACAAAAC7u7u7u7u7u7u7u7u7u7u7OzMzMzMzMzMzMzMzMzMzszu7MzMzMzMzMzMzMzMzu7M7uzMzMzMzMzMzMzMzM7uzOzMzMzMzMzMzMzMzMzMzszszMzMzMzMzMzMzMzMzM7M7MzMzMzMzMzMzMzMzMzOzOzMzMzMzMzMzMzMzMzMzszszMzMzMzMzMzMzMzMzM7M7MzMzMzMzMzMzMzMzMzOzOzMzMzMzMzMzMzMzMzMzszszMzMzMzMzMzMzMzMzM7M7uzMzMzMzMzMzMzMzM7uzO7szMzMzMzMzMzMzMzO7szszMzMzMzMzMzMzMzMzM7O7u7u7u7u7u7u7u7u7u7u7",
-        "mimeType": "image/x-mkcd-f4",
-        "displayName": "platform1x2"
-    },
     "*": {
         "mimeType": "image/x-mkcd-f4",
         "dataEncoding": "base64",
