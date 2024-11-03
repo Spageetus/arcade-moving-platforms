@@ -70,13 +70,7 @@ namespace Platforms
             console.log("Sprite with id: " + sprite.id + " is not a Platformer")
             return
         }
-        if (sprite.right < platform.x) { //hits left side of platform
-            sprite.right = platform.left
-        }
-        else if (sprite.left > platform.x) { //hits right side of platform
-            sprite.left = platform.right
-        }
-        else if (sprite.bottom <= platform.y) //hits top of platform
+        if (sprite.bottom <= platform.y - (platform.y - platform.top)/4) //hits top of platform
         {
             currentPlatformer.isOnPlatform = true
             currentPlatformer.currentPlatform = platform
@@ -88,6 +82,19 @@ namespace Platforms
         {
             sprite.top = platform.bottom
             sprite.vy = 0
+        }
+        if (sprite.right < platform.x) { //hits left side of platform
+            //sprite.right = platform.left
+            while (sprite.right < (platform.left + platform.x)/2 && sprite.overlapsWith(platform)) {
+                sprite.right -= 2
+            }
+        }
+        else if (sprite.left > platform.x) { //hits right side of platform
+            //sprite.left = platform.right
+            while(sprite.left > (platform.right + platform.x)/2 && sprite.overlapsWith(platform))
+            {
+                sprite.left += 1
+            }
         }
     }
 

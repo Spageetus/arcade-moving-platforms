@@ -14,8 +14,8 @@ controller.moveSprite(playerSprite, 100, 0)
 Platforms.makePlatformer(playerSprite)
 
 //platforms
-let p1 = Platforms.create(assets.image`platform2x1`)
-p1.y += 22
+let p1 = Platforms.create(assets.image`platform1x2`)
+p1.y += 16
 
 //p1.vx = 25
 p1.vy = 10
