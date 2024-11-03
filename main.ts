@@ -1,7 +1,8 @@
-namespace SpriteKind
-{
+namespace SpriteKind {
     export const Platform = SpriteKind.create()
 }
+//% color=190 weight=100 icon="\uf151" block="Platforms" advanced=true
+//% groups='["Create", "SpriteKind", "Behavior", "Collision", "others"]'
 namespace Platforms
 {
     class Platformer
@@ -23,10 +24,17 @@ namespace Platforms
 
     let allPlatformers: Platformer[]
     let spritesRidePlatforms: boolean
-    
+    const platformKind = SpriteKind.Platform
+
+    /**
+     * returns SpriteKind.Platform
+     */
     //% block="Platform" color=#3B6FEA group='SpriteKind'
     //% blockid="platformKind"
-    export let platformId = SpriteKind.Platform
+    export function getPlatformKind()
+    {
+        return platformKind
+    }
 
     /**
      * Creates a platform using an image
