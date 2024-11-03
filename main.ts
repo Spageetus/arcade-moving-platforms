@@ -23,6 +23,9 @@ namespace Platforms
     let allPlatformers: Platformer[]
     export let spritesRidePlatforms: boolean
 
+    /**
+     * Returns a platform using an image
+     */
     export function create(img: Image) {
         if (SpriteKind.Platform == undefined) { //Platform kind is undefined when this function runs for the first time
             SpriteKind.Platform = SpriteKind.Player-1
@@ -30,6 +33,9 @@ namespace Platforms
         return sprites.create(img, SpriteKind.Platform)
     }
 
+    /**
+     * Allows a sprite to use platforms
+     */
     export function makePlatformer(sprite: Sprite)
     {
         if(allPlatformers == null)
@@ -44,6 +50,7 @@ namespace Platforms
         allPlatformers[sprite.id] = new Platformer(sprite)
     }
 
+
     export function isSpriteOnPlatform(sprite: Sprite)
     {
         if(sprite.id < allPlatformers.length) //sprite could be a platformer
@@ -55,7 +62,10 @@ namespace Platforms
         }
         return false
     }
-
+    /**
+     * Handles Platform Collision (use inside of an overlap container)
+     */
+    //% block
     export function platformCollisionHandler(sprite: Sprite, platform: Sprite) //call function inside of overlap container
     {
         if(platform.kind() != SpriteKind.Platform)
