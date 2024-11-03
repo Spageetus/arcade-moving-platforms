@@ -26,6 +26,7 @@ namespace Platforms
 
     let allPlatformers: Platformer[]
     let spritesRidePlatforms: boolean
+    
     //% block="Platform" color=#3B6FEA group='SpriteKind'
     //% blockid="platformKind"
     export let platformId = SpriteKind.Player-1
