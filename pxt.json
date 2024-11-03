@@ -12,8 +12,7 @@
         "tilemap.g.jres",
         "tilemap.g.ts",
         "images.g.jres",
-        "images.g.ts",
-        "test.ts"
+        "images.g.ts"
     ],
     "testFiles": [],
     "targetVersions": {
