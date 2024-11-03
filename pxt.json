@@ -1,5 +1,5 @@
 {
-    "name": "Moving Platforms Extension - Copy",
+    "name": "Moving Platforms Extension",
     "description": "",
     "dependencies": {
         "device": "*"

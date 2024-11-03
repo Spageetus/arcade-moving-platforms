@@ -4,6 +4,7 @@ namespace SpriteKind
 }
 
 //% color=190 weight=100 icon="\uf151" block="Platforms" advanced=true
+//% groups=['Create', 'SpriteKind', 'Behavior', 'others']
 namespace Platforms
 {
     class Platformer
@@ -20,15 +21,15 @@ namespace Platforms
     }
 
     let allPlatformers: Platformer[]
-    export let spritesRidePlatforms: boolean
-    //% block="Platform" color=#3B6FEA
+    let spritesRidePlatforms: boolean
+    //% block="Platform" color=#3B6FEA group='SpriteKind'
     export let platformId = SpriteKind.Player-1
 
     /**
      * Creates a platform using an image
      * @param image
      */
-    //% block="platform $img" weight=1
+    //% block="platform $img" group='Create'
     //% img.shadow="screen_image_picker"
     export function create(img: Image) {
         if (SpriteKind.Platform == undefined) { //Platform kind is undefined when this function runs for the first time
@@ -61,7 +62,7 @@ namespace Platforms
      * @param Sprite
      * @returns boolean
      */
-    //% block="Is $sprite on a platform"
+    //% block="Is $sprite on a platform" group='others'
     export function isSpriteOnPlatform(sprite: Sprite)
     {
         if(sprite.id < allPlatformers.length) //sprite could be a platformer
@@ -73,11 +74,33 @@ namespace Platforms
         }
         return false
     }
+
+    /**
+     * Returns if Sprites are allowed to ride on top of platforms
+     * @returns boolean
+     */
+    //% block="sprites ride platforms"
+    //% group='behavior'
+    export function doSpritesRidePlatforms()
+    {
+        return spritesRidePlatforms
+    }
+
+    /**
+     * Changes sprite riding behavior
+     * @param boolean
+     */
+    //% block="set sprites ride platforms %b"
+    //% group='behavior'
+    export function setSpritesRidePlatforms(b: boolean)
+    {
+        spritesRidePlatforms = b
+    }
     /**
      * Handles Platform Collision (use inside of an overlap container)
      * @param sprite, platform
      */
-    //% block="make $sprite collide with $platform"
+    //% block="make $sprite collide with $platform" group='others'
     export function platformCollisionHandler(sprite: Sprite, platform: Sprite) //call function inside of overlap container
     {
         if(platform.kind() != SpriteKind.Platform)
