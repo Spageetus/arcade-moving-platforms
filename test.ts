@@ -1,4 +1,4 @@
-
+/*
 
 //setup
 tiles.setTilemap(assets.tilemap`testLevel`)
@@ -48,3 +48,5 @@ forever(function()
 {
     playerSprite.sayText(playerSprite.ay)
 })
+
+*/

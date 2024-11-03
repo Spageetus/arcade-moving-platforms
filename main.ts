@@ -1,9 +1,8 @@
-namespace SpriteKind {
+namespace SpriteKind
+{
     export let Platform = SpriteKind.Player-1
 }
-/**
- * Gives access to Platform blocks
- */
+
 //% color=190 weight=100 icon="\uf151" block="Platforms" advanced=true
 namespace Platforms
 {
@@ -22,10 +21,15 @@ namespace Platforms
 
     let allPlatformers: Platformer[]
     export let spritesRidePlatforms: boolean
+    //% block="Platform" color=#3B6FEA
+    export let platformId = SpriteKind.Player-1
 
     /**
-     * Returns a platform using an image
+     * Creates a platform using an image
+     * @param image
      */
+    //% block="platform $img" weight=1
+    //% img.shadow="screen_image_picker"
     export function create(img: Image) {
         if (SpriteKind.Platform == undefined) { //Platform kind is undefined when this function runs for the first time
             SpriteKind.Platform = SpriteKind.Player-1
@@ -35,7 +39,9 @@ namespace Platforms
 
     /**
      * Allows a sprite to use platforms
+     * @param Sprite
      */
+    //$ block="make $sprite platformer"
     export function makePlatformer(sprite: Sprite)
     {
         if(allPlatformers == null)
@@ -50,7 +56,12 @@ namespace Platforms
         allPlatformers[sprite.id] = new Platformer(sprite)
     }
 
-
+    /**
+     * Returns true if a sprite is on top of a platform
+     * @param Sprite
+     * @returns boolean
+     */
+    //% block="Is $sprite on a platform"
     export function isSpriteOnPlatform(sprite: Sprite)
     {
         if(sprite.id < allPlatformers.length) //sprite could be a platformer
@@ -64,8 +75,9 @@ namespace Platforms
     }
     /**
      * Handles Platform Collision (use inside of an overlap container)
+     * @param sprite, platform
      */
-    //% block
+    //% block="make $sprite collide with $platform"
     export function platformCollisionHandler(sprite: Sprite, platform: Sprite) //call function inside of overlap container
     {
         if(platform.kind() != SpriteKind.Platform)
