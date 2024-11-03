@@ -9,6 +9,11 @@
         "mimeType": "image/x-mkcd-f4",
         "displayName": "platform1x1"
     },
+    "image3": {
+        "data": "hwQQABAAAACqqqqq/////6qqqqr/////qqqqqv////+qqqqq/////6qqqqr/////qqqqqv////+qqqqq/////6qqqqr//////////6qqqqr/////qqqqqv////+qqqqq/////6qqqqr/////qqqqqv////+qqqqq/////6qqqqr/////qqqqqg==",
+        "mimeType": "image/x-mkcd-f4",
+        "displayName": "missingTexture"
+    },
     "*": {
         "mimeType": "image/x-mkcd-f4",
         "dataEncoding": "base64",

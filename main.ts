@@ -1,20 +1,68 @@
+sprites.onOverlap(SpriteKind.Player, SpriteKind.Platform, function (sprite, platform) {
+    Platforms.platformCollisionHandler(sprite, platform)
+})
 namespace SpriteKind {
-    export let Platform = 9999
+    export let Platform = SpriteKind.Player-1
 }
-namespace MoveablePlatform
+namespace Platforms
 {
-    let isOnPlatform = false
-    let currentPlatform: Sprite = null
-    
+    class Platformer
+    {
+        isOnPlatform = false
+        currentPlatform: Sprite = null
+        sprite: Sprite = null
+        gravity = 0
+        constructor(sprite: Sprite)
+        {
+            this.sprite = sprite
+            this.gravity = sprite.ay
+        }
+    }
+
+    let allPlatformers: Platformer[]
+
     export function create(img: Image) {
         if (SpriteKind.Platform == undefined) { //Platform kind is undefined when this function runs for the first time
-            SpriteKind.Platform = 9999
+            SpriteKind.Platform = SpriteKind.Player-1
         }
         return sprites.create(img, SpriteKind.Platform)
     }
 
+    export function makePlatformer(sprite: Sprite)
+    {
+        if(allPlatformers == null)
+        {
+            allPlatformers = []
+        }
+        console.log("Sprite ID: " + sprite.id)
+        let temp = allPlatformers
+        while(allPlatformers.length <= sprite.id)
+        {
+            allPlatformers.push(null)
+        }
+        allPlatformers[sprite.id] = new Platformer(sprite)
+    }
+
+    export function isSpriteOnPlatform(sprite: Sprite)
+    {
+        if(sprite.id < allPlatformers.length) //sprite could be a platformer
+        {
+            if(allPlatformers[sprite.id] != null) //sprite is a platformer
+            {
+                return allPlatformers[sprite.id].isOnPlatform
+            }
+        }
+        return false
+    }
+
     export function platformCollisionHandler(sprite: Sprite, platform: Sprite)
     {
+        let currentPlatformer = allPlatformers[sprite.id]
+        if(currentPlatformer == null)
+        {
+            console.log("Sprite with id: " + sprite.id + " is not a Platformer")
+            return
+        }
         if (sprite.right < platform.x) {
             sprite.right = platform.left
         }
@@ -23,8 +71,8 @@ namespace MoveablePlatform
         }
         else if (sprite.bottom <= platform.y) //hits top of platform
         {
-            isOnPlatform = true
-            currentPlatform = platform
+            currentPlatformer.isOnPlatform = true
+            currentPlatformer.currentPlatform = platform
             sprite.ay = 0
             sprite.vy = 0
             sprite.bottom = platform.top
@@ -35,4 +83,24 @@ namespace MoveablePlatform
             sprite.vy = 0
         }
     }
+
+    game.onUpdate(function()
+    {
+        for(let p of allPlatformers)
+        {
+            if(p != null)
+            {
+                if(p.currentPlatform != null)
+                {
+                    let sprite = p.sprite
+                    if(sprite.left > p.currentPlatform.right || sprite.right < p.currentPlatform.left)
+                    {
+                        p.isOnPlatform = false
+                        p.currentPlatform = null
+                        sprite.ay = p.gravity
+                    }
+                }
+            }
+        }
+    })
 }

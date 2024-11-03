@@ -41,6 +41,25 @@ c 3 b b 3 3 3 3 3 3 3 3 b b 3 c
 c 3 3 3 3 3 3 3 3 3 3 3 3 3 3 c 
 c c c c c c c c c c c c c c c c 
 `;
+            case "image3":
+            case "missingTexture":return img`
+a a a a a a a a f f f f f f f f 
+a a a a a a a a f f f f f f f f 
+a a a a a a a a f f f f f f f f 
+a a a a a a a a f f f f f f f f 
+a a a a a a a a f f f f f f f f 
+a a a a a a a a f f f f f f f f 
+a a a a a a a a f f f f f f f f 
+a a a a a a a a f f f f f f f f 
+f f f f f f f f a a a a a a a a 
+f f f f f f f f a a a a a a a a 
+f f f f f f f f a a a a a a a a 
+f f f f f f f f a a a a a a a a 
+f f f f f f f f a a a a a a a a 
+f f f f f f f f a a a a a a a a 
+f f f f f f f f a a a a a a a a 
+f f f f f f f f a a a a a a a a 
+`;
         }
         return null;
     })
