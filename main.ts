@@ -1,10 +1,7 @@
 namespace SpriteKind
 {
-    export let Platform = SpriteKind.Player-1
+    export const Platform = SpriteKind.create()
 }
-
-//% color=190 weight=100 icon="\uf151" block="Platforms" advanced=true
-//% groups='["Create", "SpriteKind", "Behavior", "Collision", "others"]'
 namespace Platforms
 {
     class Platformer
@@ -29,7 +26,7 @@ namespace Platforms
     
     //% block="Platform" color=#3B6FEA group='SpriteKind'
     //% blockid="platformKind"
-    export let platformId = SpriteKind.Player-1
+    export let platformId = SpriteKind.Platform
 
     /**
      * Creates a platform using an image
@@ -41,7 +38,7 @@ namespace Platforms
     //% blockSetVariable=myPlatform
     export function create(img: Image) {
         if (SpriteKind.Platform == undefined) { //Platform kind is undefined when this function runs for the first time
-            SpriteKind.Platform = SpriteKind.Player-1
+            //SpriteKind.Platform = SpriteKind.Player-1
         }
         return sprites.create(img, SpriteKind.Platform)
     }
