@@ -4,7 +4,7 @@ namespace SpriteKind
 }
 
 //% color=190 weight=100 icon="\uf151" block="Platforms" advanced=true
-//% groups=['Create', 'SpriteKind', 'Behavior', 'others']
+//% groups='["Create", "SpriteKind", "Behavior", "Collision", "others"]'
 namespace Platforms
 {
     class Platformer
@@ -34,9 +34,10 @@ namespace Platforms
      * Creates a platform using an image
      * @param image
      */
-    //% block="platform $img" group='Create'
+    //% block="platform $img" group='Create' weight=100
     //% img.shadow="screen_image_picker"
     //% blockid="createPlatform"
+    //% blockSetVariable=myPlatform
     export function create(img: Image) {
         if (SpriteKind.Platform == undefined) { //Platform kind is undefined when this function runs for the first time
             SpriteKind.Platform = SpriteKind.Player-1
@@ -48,9 +49,10 @@ namespace Platforms
      * Allows a sprite to use platforms
      * @param Sprite
      */
-    //% block="make $sprite use platforms"
+    //% block="make %sprite=variables_get(mySprite) use platforms"
     //% blockid="makeSpritePlatformer"
     //% group='Create'
+    //% 
     export function makePlatformer(sprite: Sprite)
     {
         if(allPlatformers == null)
@@ -84,6 +86,7 @@ namespace Platforms
     //% block="set sprites ride platforms %b"
     //% blockid="setSpritesRidePlatforms"
     //% group='Behavior'
+    //% b.shadow="toggleOnOff"
     export function setSpritesRidePlatforms(b: boolean)
     {
         spritesRidePlatforms = b
@@ -94,7 +97,7 @@ namespace Platforms
      * @param Sprite
      * @returns boolean
      */
-    //% block="Is $sprite on a platform"
+    //% block="Is %sprite=variables_get(mySprite) on a platform"
     //% blockid="isSpriteOnPlatform"
     //% group='others'
     export function isSpriteOnPlatform(sprite: Sprite) {
@@ -113,9 +116,9 @@ namespace Platforms
      * Handles Platform Collision (use inside of an overlap container)
      * @param sprite, platform
      */
-    //% block="make $sprite collide with $platform" group='others'
+    //% block="make %sprite=variables_get(mySprite) collide with %platform=variables_get(myPlatform)" group='others'
     //% blockid="platformCollisionHandler"
-    //% group='others'
+    //% group='Collision'
     export function platformCollisionHandler(sprite: Sprite, platform: Sprite) //call function inside of overlap container
     {
         if(platform.kind() != SpriteKind.Platform)
