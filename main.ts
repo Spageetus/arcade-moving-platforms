@@ -4,7 +4,7 @@ namespace SpriteKind {
 /**
  * Gives access to Platform blocks
  */
-//% color=190 weight=100 icon="\f151" block="Platforms" advanced=true
+//% color=190 weight=100 icon="\uf151" block="Platforms" advanced=true
 namespace Platforms
 {
     class Platformer
