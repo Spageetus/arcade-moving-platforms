@@ -1,35 +1,42 @@
-tiles.setCurrentTilemap(assets.tilemap`testLevel`)
+
+
+//setup
+tiles.setTilemap(assets.tilemap`testLevel`)
 scene.setBackgroundColor(9)
 
+
+//player sprite stuff
 let playerSprite = sprites.create(assets.image`playerImage`, SpriteKind.Player)
-console.log(playerSprite.id)
-tiles.placeOnTile(playerSprite, tiles.getTileLocation(0, 0))
+//playerSprite.setFlag(SpriteFlag.ShowPhysics, true)
 playerSprite.ay = 600
+tiles.placeOnTile(playerSprite, tiles.getTileLocation(0, 6))
 controller.moveSprite(playerSprite, 100, 0)
 Platforms.makePlatformer(playerSprite)
-//Platforms.spritesRidePlatforms = true
 
+//platforms
+let p1 = Platforms.create(assets.image`platform2x1`)
+p1.y += 22
 
-let p1 = Platforms.create(assets.image`platform1x1`)
-p1.y += 16
+p1.vx = 25
+//p1.vy = 10
 p1.setFlag(SpriteFlag.BounceOnWall, true)
-p1.vx = 50
+Platforms.spritesRidePlatforms = true
 
-controller.up.onEvent(ControllerButtonEvent.Pressed, function()
-{
-    if(playerSprite.isHittingTile(CollisionDirection.Bottom) || Platforms.isSpriteOnPlatform(playerSprite))
-    {
+
+//controller events
+controller.up.onEvent(ControllerButtonEvent.Pressed, function () {
+    if (playerSprite.isHittingTile(CollisionDirection.Bottom) || Platforms.isSpriteOnPlatform(playerSprite)) {
         playerSprite.ay = 600
         playerSprite.vy = -250
     }
 })
 
-controller.A.onEvent(ControllerButtonEvent.Pressed, function()
-{
-    Platforms.spritesRidePlatforms = true
+//overlap events
+sprites.onOverlap(SpriteKind.Player, SpriteKind.Platform, function (sprite: Sprite, platform: Sprite) {
+    Platforms.platformCollisionHandler(sprite, platform)
 })
 
-controller.B.onEvent(ControllerButtonEvent.Pressed, function()
+game.onUpdateInterval(2000, function()
 {
-    Platforms.spritesRidePlatforms = false
+    p1.vy *= -1
 })

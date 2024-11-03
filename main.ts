@@ -60,6 +60,11 @@ namespace Platforms
             console.log("Cannot ride non-Platform sprites")
             return
         }
+        if (allPlatformers == null || sprite.id >= allPlatformers.length)
+        {
+            console.log("No platformers")
+            return
+        }
         let currentPlatformer = allPlatformers[sprite.id]
         if(currentPlatformer == null)
         {
@@ -102,16 +107,27 @@ namespace Platforms
                     let sprite = p.sprite
 
                     if (spritesRidePlatforms) { //makes sprites have same velocity as platform
-                        sprite.vx = p.currentPlatform.vx
-                        sprite.vy = p.currentPlatform.vy
+                        if(p.currentPlatform.vx != 0)
+                        {
+                            sprite.vx = p.currentPlatform.vx
+                        }
+                        if(p.currentPlatform.vy != 0)
+                        {
+                            sprite.vy = p.currentPlatform.vy
+                        }
                     }
                     else //stops sprite from staying on platform
                     {
                         sprite.vx = 0
-                        sprite.vy = 0
                     }
 
                     if(sprite.left > p.currentPlatform.right || sprite.right < p.currentPlatform.left) //drops platformer off of platform if it walks off the edge
+                    {
+                        p.isOnPlatform = false
+                        p.currentPlatform = null
+                        sprite.ay = p.gravity
+                    }
+                    else if(sprite.bottom < p.currentPlatform.top)
                     {
                         p.isOnPlatform = false
                         p.currentPlatform = null
