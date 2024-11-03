@@ -1,4 +1,5 @@
- 
+## Use Example
+[https://arcade.makecode.com/S44692-94654-35064-22898](https://arcade.makecode.com/S44692-94654-35064-22898)
 
 
 > Open this page at [https://spageetus.github.io/moving-platforms-extension/](https://spageetus.github.io/moving-platforms-extension/)
