@@ -1,6 +1,3 @@
-sprites.onOverlap(SpriteKind.Player, SpriteKind.Platform, function (sprite, platform) {
-    Platforms.platformCollisionHandler(sprite, platform)
-})
 namespace SpriteKind {
     export let Platform = SpriteKind.Player-1
 }
@@ -92,6 +89,10 @@ namespace Platforms
 
     game.onUpdate(function()
     {
+        if(allPlatformers == null) //stops dereferencing null error
+        {
+            return
+        }
         for(let p of allPlatformers)
         {
             if(p != null) //makes sure platformer exists
