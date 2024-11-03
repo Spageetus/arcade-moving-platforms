@@ -1,7 +1,3 @@
-## Use Example
-[https://arcade.makecode.com/S44692-94654-35064-22898](https://arcade.makecode.com/S44692-94654-35064-22898)
-
-
 > Open this page at [https://spageetus.github.io/moving-platforms-extension/](https://spageetus.github.io/moving-platforms-extension/)
 
 ## Use as Extension
@@ -12,6 +8,10 @@ This repository can be added as an **extension** in MakeCode.
 * click on **New Project**
 * click on **Extensions** under the gearwheel menu
 * search for **https://github.com/spageetus/moving-platforms-extension** and import
+
+## Use Example
+[https://arcade.makecode.com/S44692-94654-35064-22898](https://arcade.makecode.com/S44692-94654-35064-22898)
+
 
 ## Edit this project ![Build status badge](https://github.com/spageetus/moving-platforms-extension/workflows/MakeCode/badge.svg)
 
