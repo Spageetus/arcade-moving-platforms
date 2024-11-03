@@ -20,6 +20,7 @@ namespace Platforms
     }
 
     let allPlatformers: Platformer[]
+    export let spritesRidePlatforms: boolean
 
     export function create(img: Image) {
         if (SpriteKind.Platform == undefined) { //Platform kind is undefined when this function runs for the first time
@@ -55,8 +56,13 @@ namespace Platforms
         return false
     }
 
-    export function platformCollisionHandler(sprite: Sprite, platform: Sprite)
+    export function platformCollisionHandler(sprite: Sprite, platform: Sprite) //call function inside of overlap container
     {
+        if(platform.kind() != SpriteKind.Platform)
+        {
+            console.log("Cannot ride non-Platform sprites")
+            return
+        }
         let currentPlatformer = allPlatformers[sprite.id]
         if(currentPlatformer == null)
         {
@@ -88,12 +94,23 @@ namespace Platforms
     {
         for(let p of allPlatformers)
         {
-            if(p != null)
+            if(p != null) //makes sure platformer exists
             {
-                if(p.currentPlatform != null)
+                if(p.currentPlatform != null) //makes sure platformer is on a platform
                 {
                     let sprite = p.sprite
-                    if(sprite.left > p.currentPlatform.right || sprite.right < p.currentPlatform.left)
+
+                    if (spritesRidePlatforms) { //makes sprites have same velocity as platform
+                        sprite.vx = p.currentPlatform.vx
+                        sprite.vy = p.currentPlatform.vy
+                    }
+                    else //stops sprite from staying on platform
+                    {
+                        sprite.vx = 0
+                        sprite.vy = 0
+                    }
+
+                    if(sprite.left > p.currentPlatform.right || sprite.right < p.currentPlatform.left) //drops platformer off of platform if it walks off the edge
                     {
                         p.isOnPlatform = false
                         p.currentPlatform = null

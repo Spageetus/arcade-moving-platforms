@@ -7,6 +7,7 @@ tiles.placeOnTile(playerSprite, tiles.getTileLocation(0, 0))
 playerSprite.ay = 600
 controller.moveSprite(playerSprite, 100, 0)
 Platforms.makePlatformer(playerSprite)
+//Platforms.spritesRidePlatforms = true
 
 
 let p1 = Platforms.create(assets.image`platform1x1`)
@@ -21,4 +22,14 @@ controller.up.onEvent(ControllerButtonEvent.Pressed, function()
         playerSprite.ay = 600
         playerSprite.vy = -250
     }
+})
+
+controller.A.onEvent(ControllerButtonEvent.Pressed, function()
+{
+    Platforms.spritesRidePlatforms = true
+})
+
+controller.B.onEvent(ControllerButtonEvent.Pressed, function()
+{
+    Platforms.spritesRidePlatforms = false
 })
