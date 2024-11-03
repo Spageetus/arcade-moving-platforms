@@ -1,6 +1,10 @@
 namespace SpriteKind {
     export let Platform = SpriteKind.Player-1
 }
+/**
+ * Gives access to Platform blocks
+ */
+//% color=190 weight=100 icon="\f151" block="Platforms" advanced=true
 namespace Platforms
 {
     class Platformer
