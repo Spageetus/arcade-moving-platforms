@@ -32,7 +32,6 @@ namespace Platforms
         {
             allPlatformers = []
         }
-        console.log("Sprite ID: " + sprite.id)
         let temp = allPlatformers
         while(allPlatformers.length <= sprite.id)
         {
@@ -71,10 +70,10 @@ namespace Platforms
             console.log("Sprite with id: " + sprite.id + " is not a Platformer")
             return
         }
-        if (sprite.right < platform.x) {
+        if (sprite.right < platform.x) { //hits left side of platform
             sprite.right = platform.left
         }
-        else if (sprite.left > platform.x) {
+        else if (sprite.left > platform.x) { //hits right side of platform
             sprite.left = platform.right
         }
         else if (sprite.bottom <= platform.y) //hits top of platform
@@ -106,32 +105,28 @@ namespace Platforms
                 {
                     let sprite = p.sprite
 
+                    if (sprite.left > p.currentPlatform.right || sprite.right < p.currentPlatform.left) //drops platformer off of platform if it walks off the edge
+                    {
+                        p.isOnPlatform = false
+                        p.currentPlatform = null
+                        sprite.ay = p.gravity
+                        continue
+                    }
+
+                    if (sprite.bottom < p.currentPlatform.top-2) { //sprite jumps off of platform (added wiggle room to prevent jittering)
+                        p.isOnPlatform = false
+                        p.currentPlatform = null
+                        sprite.ay = p.gravity
+                        continue
+                    }
+
                     if (spritesRidePlatforms) { //makes sprites have same velocity as platform
-                        if(p.currentPlatform.vx != 0)
-                        {
-                            sprite.vx = p.currentPlatform.vx
-                        }
-                        if(p.currentPlatform.vy != 0)
-                        {
-                            sprite.vy = p.currentPlatform.vy
-                        }
+                        sprite.vx = p.currentPlatform.vx
+                        sprite.vy = p.currentPlatform.vy
                     }
                     else //stops sprite from staying on platform
                     {
                         sprite.vx = 0
-                    }
-
-                    if(sprite.left > p.currentPlatform.right || sprite.right < p.currentPlatform.left) //drops platformer off of platform if it walks off the edge
-                    {
-                        p.isOnPlatform = false
-                        p.currentPlatform = null
-                        sprite.ay = p.gravity
-                    }
-                    else if(sprite.bottom < p.currentPlatform.top)
-                    {
-                        p.isOnPlatform = false
-                        p.currentPlatform = null
-                        sprite.ay = p.gravity
                     }
                 }
             }

@@ -17,8 +17,8 @@ Platforms.makePlatformer(playerSprite)
 let p1 = Platforms.create(assets.image`platform2x1`)
 p1.y += 22
 
-p1.vx = 25
-//p1.vy = 10
+//p1.vx = 25
+p1.vy = 10
 p1.setFlag(SpriteFlag.BounceOnWall, true)
 Platforms.spritesRidePlatforms = true
 
@@ -26,8 +26,11 @@ Platforms.spritesRidePlatforms = true
 //controller events
 controller.up.onEvent(ControllerButtonEvent.Pressed, function () {
     if (playerSprite.isHittingTile(CollisionDirection.Bottom) || Platforms.isSpriteOnPlatform(playerSprite)) {
-        playerSprite.ay = 600
         playerSprite.vy = -250
+        if(Platforms.isSpriteOnPlatform(playerSprite))
+        {
+            console.logValue("vy", playerSprite.vy)
+        }
     }
 })
 
@@ -39,4 +42,9 @@ sprites.onOverlap(SpriteKind.Player, SpriteKind.Platform, function (sprite: Spri
 game.onUpdateInterval(2000, function()
 {
     p1.vy *= -1
+})
+
+forever(function()
+{
+    playerSprite.sayText(playerSprite.ay)
 })
