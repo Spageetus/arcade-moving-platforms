@@ -4,7 +4,7 @@ namespace SpriteKind
 }
 
 //% color=190 weight=100 icon="\uf151" block="Platforms" advanced=true
-//% groups='["Create", "SpriteKind", "Behavior", "Collision", "others"]'
+//% groups=['Create', 'SpriteKind', 'Behavior', 'others']
 namespace Platforms
 {
     class Platformer
@@ -17,27 +17,20 @@ namespace Platforms
         {
             this.sprite = sprite
             this.gravity = sprite.ay
-            if(this.gravity == 0)
-            {
-                console.log("WARNING: sprite with id:" + sprite.id + " has a y acceleration of 0")
-            }
         }
     }
 
     let allPlatformers: Platformer[]
     let spritesRidePlatforms: boolean
     //% block="Platform" color=#3B6FEA group='SpriteKind'
-    //% blockid="platformKind"
     export let platformId = SpriteKind.Player-1
 
     /**
      * Creates a platform using an image
      * @param image
      */
-    //% block="platform $img" group='Create' weight=100
+    //% block="platform $img" group='Create'
     //% img.shadow="screen_image_picker"
-    //% blockid="createPlatform"
-    //% blockSetVariable=myPlatform
     export function create(img: Image) {
         if (SpriteKind.Platform == undefined) { //Platform kind is undefined when this function runs for the first time
             SpriteKind.Platform = SpriteKind.Player-1
@@ -49,10 +42,7 @@ namespace Platforms
      * Allows a sprite to use platforms
      * @param Sprite
      */
-    //% block="make %sprite=variables_get(mySprite) use platforms"
-    //% blockid="makeSpritePlatformer"
-    //% group='Create'
-    //% 
+    //$ block="make $sprite platformer"
     export function makePlatformer(sprite: Sprite)
     {
         if(allPlatformers == null)
@@ -68,12 +58,29 @@ namespace Platforms
     }
 
     /**
+     * Returns true if a sprite is on top of a platform
+     * @param Sprite
+     * @returns boolean
+     */
+    //% block="Is $sprite on a platform" group='others'
+    export function isSpriteOnPlatform(sprite: Sprite)
+    {
+        if(sprite.id < allPlatformers.length) //sprite could be a platformer
+        {
+            if(allPlatformers[sprite.id] != null) //sprite is a platformer
+            {
+                return allPlatformers[sprite.id].isOnPlatform
+            }
+        }
+        return false
+    }
+
+    /**
      * Returns if Sprites are allowed to ride on top of platforms
      * @returns boolean
      */
-    //% block="do sprites ride platforms"
-    //% blockid="getSpritesRidePlatforms"
-    //% group='Behavior'
+    //% block="sprites ride platforms"
+    //% group='behavior'
     export function doSpritesRidePlatforms()
     {
         return spritesRidePlatforms
@@ -84,41 +91,16 @@ namespace Platforms
      * @param boolean
      */
     //% block="set sprites ride platforms %b"
-    //% blockid="setSpritesRidePlatforms"
-    //% group='Behavior'
-    //% b.shadow="toggleOnOff"
+    //% group='behavior'
     export function setSpritesRidePlatforms(b: boolean)
     {
         spritesRidePlatforms = b
     }
-
-    /**
-     * Returns true if a sprite is on top of a platform
-     * @param Sprite
-     * @returns boolean
-     */
-    //% block="Is %sprite=variables_get(mySprite) on a platform"
-    //% blockid="isSpriteOnPlatform"
-    //% group='others'
-    export function isSpriteOnPlatform(sprite: Sprite) {
-        if (sprite.id < allPlatformers.length) //sprite could be a platformer
-        {
-            if (allPlatformers[sprite.id] != null) //sprite is a platformer
-            {
-                return allPlatformers[sprite.id].isOnPlatform
-            }
-        }
-        return false
-    }
-
-
     /**
      * Handles Platform Collision (use inside of an overlap container)
      * @param sprite, platform
      */
-    //% block="make %sprite=variables_get(mySprite) collide with %platform=variables_get(myPlatform)" group='others'
-    //% blockid="platformCollisionHandler"
-    //% group='Collision'
+    //% block="make $sprite collide with $platform" group='others'
     export function platformCollisionHandler(sprite: Sprite, platform: Sprite) //call function inside of overlap container
     {
         if(platform.kind() != SpriteKind.Platform)
