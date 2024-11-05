@@ -1,6 +1,20 @@
 namespace SpriteKind {
     export const Platform = SpriteKind.create()
 }
+
+namespace Helper
+{
+    export function distanceFrom(x1: number, y1: number, x2: number, y2: number)
+    {
+        let dx = x2-x1
+        let dy = y1-y2
+        return Math.sqrt(Math.pow(dx, 2) + Math.pow(dy, 2))
+    }
+}
+
+/**
+ * Gives access to Platform functions
+ */
 //% color=190 weight=100 icon="\uf151" block="Platforms" advanced=true
 //% groups='["Create", "SpriteKind", "Behavior", "Collision", "others"]'
 namespace Platforms
@@ -49,6 +63,14 @@ namespace Platforms
             //SpriteKind.Platform = SpriteKind.Player-1
         }
         return sprites.create(img, SpriteKind.Platform)
+    }
+
+    function getSpritesPlatformer(sprite: Sprite) {
+        let spriteId = sprite.id
+        if (spriteId >= allPlatformers.length) {
+            return null
+        }
+        return allPlatformers[spriteId]
     }
 
     /**
@@ -125,49 +147,61 @@ namespace Platforms
     //% block="make %sprite=variables_get(mySprite) collide with %platform=variables_get(myPlatform)" group='others'
     //% blockid="platformCollisionHandler"
     //% group='Collision'
-    export function platformCollisionHandler(sprite: Sprite, platform: Sprite) //call function inside of overlap container
+    export function platformCollisionHandler(sprite: Sprite, platform: Sprite) //many inconstistancies, needs redoing
     {
-        if(platform.kind() != SpriteKind.Platform)
+        if(platform.kind() != SpriteKind.Platform) //ensures that function is only called on sprite of Kind Platform
         {
-            console.log("Cannot ride non-Platform sprites")
-            return
+            throw "invalid SpriteKind. otherSprite must be of kind Platform"
         }
-        if (allPlatformers == null || sprite.id >= allPlatformers.length)
+        let spritePlatformer = getSpritesPlatformer(sprite)
+        if(spritePlatformer == null) //makes sure sprite is a platformer
         {
-            console.log("No platformers")
-            return
+            throw "Sprite with id: " + sprite.id + " is not a Platformer"
         }
-        let currentPlatformer = allPlatformers[sprite.id]
-        if(currentPlatformer == null)
+        let sLeft_pRight_distance = Math.abs(sprite.left - platform.right)
+        let sRight_pLeft_distance = Math.abs(sprite.right - platform.left)
+        let sTop_pBottom_distance = Math.abs(sprite.top - platform.bottom)
+        let sBottom_pTop_distance = Math.abs(sprite.bottom - platform.top)
+
+        console.logValue("sLeft_pRight_distance", sLeft_pRight_distance)
+        console.logValue("sRight_pLeft_distance", sRight_pLeft_distance)
+        console.logValue("sTop_pBottom_distance", sTop_pBottom_distance)
+        console.logValue("sBottom_pTop_distance", sBottom_pTop_distance)
+        let closest = Math.min(Math.min(sLeft_pRight_distance, sRight_pLeft_distance), Math.min(sTop_pBottom_distance, sBottom_pTop_distance))
+        
+        if(closest = sLeft_pRight_distance) //collision on right side of platform
         {
-            console.log("Sprite with id: " + sprite.id + " is not a Platformer")
-            return
+            console.log("right side collision")
+            sprite.vx = 0
+            sprite.vy = 0
+            sprite.left = platform.right
         }
-        if (sprite.bottom <= platform.y - (platform.y - platform.top)/4) //hits top of platform
+        else if(closest = sRight_pLeft_distance) //collision on left side of platform
         {
-            currentPlatformer.isOnPlatform = true
-            currentPlatformer.currentPlatform = platform
-            sprite.ay = 0
+            console.log("left side collision")
+            sprite.vx = 0
+            sprite.vy = 0
+            while(sprite.overlapsWith(platform))
+            {
+                sprite.x-=2
+            }
+        }
+        else if(closest = sTop_pBottom_distance) //collision on bottom of platform
+        {
+            throw "bottom collision"
+            sprite.vx = 0
+            sprite.vy = 0
+            sprite.top = platform.bottom
+        }
+        else if(closest = sBottom_pTop_distance) //collision on top of platform
+        {
+            throw "top collision"
+            sprite.vx = 0
             sprite.vy = 0
             sprite.bottom = platform.top
-        }
-        else if (sprite.top >= platform.y) //hit bottom of tile
-        {
-            sprite.top = platform.bottom
-            sprite.vy = 0
-        }
-        if (sprite.right < platform.x) { //hits left side of platform
-            //sprite.right = platform.left
-            while (sprite.right < (platform.left + platform.x)/2 && sprite.overlapsWith(platform)) {
-                sprite.right -= 2
-            }
-        }
-        else if (sprite.left > platform.x) { //hits right side of platform
-            //sprite.left = platform.right
-            while(sprite.left > (platform.right + platform.x)/2 && sprite.overlapsWith(platform))
-            {
-                sprite.left += 1
-            }
+            spritePlatformer.isOnPlatform = true
+            spritePlatformer.currentPlatform = platform
+            sprite.ay = 0
         }
     }
 
