@@ -158,51 +158,61 @@ namespace Platforms
         {
             throw "Sprite with id: " + sprite.id + " is not a Platformer"
         }
-        let sLeft_pRight_distance = Math.abs(sprite.left - platform.right)
-        let sRight_pLeft_distance = Math.abs(sprite.right - platform.left)
-        let sTop_pBottom_distance = Math.abs(sprite.top - platform.bottom)
-        let sBottom_pTop_distance = Math.abs(sprite.bottom - platform.top)
+        // to determine where sprite hit platform, calculate which side was hit first
+        // velocity ~= pixels/second
 
-        console.logValue("sLeft_pRight_distance", sLeft_pRight_distance)
-        console.logValue("sRight_pLeft_distance", sRight_pLeft_distance)
-        console.logValue("sTop_pBottom_distance", sTop_pBottom_distance)
-        console.logValue("sBottom_pTop_distance", sBottom_pTop_distance)
-        let closest = Math.min(Math.min(sLeft_pRight_distance, sRight_pLeft_distance), Math.min(sTop_pBottom_distance, sBottom_pTop_distance))
+        //calculate sprite's position 1/10th second ago
+        // t = d/v, d = v*t, v = d/t
+        let spLastX = sprite.x + sprite.vx * -1/16
+        let spLastY = sprite.y + sprite.vy * -1/16
+
+        let plLastX = platform.x + platform.vx * -1/16
+        let plLastY = platform.y + platform.vy * -1/16
+
+        let spLastBottom = spLastY + sprite.height/2 //gets sprite's previous bottom
+        let plLastBottom = plLastY + platform.height/2 //gets platform's previous bottom
         
-        if(closest = sLeft_pRight_distance) //collision on right side of platform
-        {
-            console.log("right side collision")
-            sprite.vx = 0
-            sprite.vy = 0
-            sprite.left = platform.right
-        }
-        else if(closest = sRight_pLeft_distance) //collision on left side of platform
-        {
-            console.log("left side collision")
-            sprite.vx = 0
-            sprite.vy = 0
-            while(sprite.overlapsWith(platform))
-            {
-                sprite.x-=2
-            }
-        }
-        else if(closest = sTop_pBottom_distance) //collision on bottom of platform
-        {
-            throw "bottom collision"
-            sprite.vx = 0
-            sprite.vy = 0
-            sprite.top = platform.bottom
-        }
-        else if(closest = sBottom_pTop_distance) //collision on top of platform
-        {
-            throw "top collision"
-            sprite.vx = 0
-            sprite.vy = 0
-            sprite.bottom = platform.top
-            spritePlatformer.isOnPlatform = true
-            spritePlatformer.currentPlatform = platform
-            sprite.ay = 0
-        }
+        let spLastTop = spLastY - sprite.height/2 //gets sprite's previous top
+        let plLastTop = plLastY - platform.height/2 //gets platform's previous top
+
+        let spLastRight = spLastX + sprite.width/2 //gets sprite's previous right
+        let plLastRight = plLastX + platform.width/2 //gets platform's previous right
+
+        let spLastLeft = spLastX - sprite.width/2 //gets sprite's previous left
+        let plLastLeft = plLastX + platform.width/2 //gets platform's previous left
+
+
+
+        let dy = Math.abs(spLastBottom - plLastTop)
+        let dvy = Math.abs(sprite.vy - platform.vy)
+        console.log(dvy)
+        let timeToHitTop = dy/dvy
+        console.logValue("Time to hit top", timeToHitTop)
+
+        dy = Math.abs(spLastTop - plLastBottom)
+        dvy = Math.abs(sprite.vy - platform.vy)
+        let timeToHitBottom = dy/dvy
+        console.logValue("Time to hit bottom", timeToHitBottom)
+
+        dy = Math.abs(spLastLeft - plLastRight)
+        dvy = Math.abs(sprite.vx - platform.vx)
+        let timeToHitRight = dy / dvy
+        console.logValue("Time to hit right", timeToHitBottom)
+
+        dy = Math.abs(spLastRight - plLastLeft)
+        dvy = Math.abs(sprite.vx - platform.vx)
+        let timeToHitLeft = dy / dvy
+        console.logValue("Time to hit left", timeToHitBottom)
+
+
+        //FREEZES SPRITES IN PLACE
+        sprite.ay = 0
+        sprite.setVelocity(0, 0)
+        platform.setVelocity(0, 0)
+        //sprite.setPosition(spLastX, spLastY)
+        //platform.setPosition(plLastX, plLastY)
+        sprite.setFlag(SpriteFlag.GhostThroughSprites, true)
+        controller.moveSprite(sprite, 0, 0)
     }
 
     game.onUpdate(function()
