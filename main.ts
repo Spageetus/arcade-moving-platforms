@@ -149,6 +149,7 @@ namespace Platforms
     //% group='Collision'
     export function platformCollisionHandler(sprite: Sprite, platform: Sprite) //many inconstistancies, needs redoing
     {
+        console.log("running")
         if(platform.kind() != SpriteKind.Platform) //ensures that function is only called on sprite of Kind Platform
         {
             throw "invalid SpriteKind. otherSprite must be of kind Platform"
@@ -180,39 +181,102 @@ namespace Platforms
 
         let spLastLeft = spLastX - sprite.width/2 //gets sprite's previous left
         let plLastLeft = plLastX + platform.width/2 //gets platform's previous left
-
-
+        //console.logValue("last top", plLastTop)
+        //console.logValue("last right", spLastRight)
+        //console.logValue("last left", spLastLeft)
+        //console.logValue("last bottom", spLastBottom)
 
         let dy = Math.abs(spLastBottom - plLastTop)
         let dvy = Math.abs(sprite.vy - platform.vy)
-        console.log(dvy)
+        //console.log(dvy)
         let timeToHitTop = dy/dvy
         console.logValue("Time to hit top", timeToHitTop)
+        console.logValue("dy", dy)
+        console.logValue("dvy", dvy)
+        if(timeToHitTop == NaN)
+        {
+            timeToHitTop = Infinity
+        }
 
         dy = Math.abs(spLastTop - plLastBottom)
         dvy = Math.abs(sprite.vy - platform.vy)
         let timeToHitBottom = dy/dvy
+        if (timeToHitBottom == NaN) {
+            timeToHitBottom = Infinity
+        }
         console.logValue("Time to hit bottom", timeToHitBottom)
+        console.logValue("dy", dy)
+        console.logValue("dvy", dvy)
 
-        dy = Math.abs(spLastLeft - plLastRight)
-        dvy = Math.abs(sprite.vx - platform.vx)
-        let timeToHitRight = dy / dvy
-        console.logValue("Time to hit right", timeToHitBottom)
+        let dx = Math.abs(spLastLeft - plLastRight)
+        let dvx = Math.abs(sprite.vx - platform.vx)
+        let timeToHitRight = dx / dvx
+        //console.logValue("Time to hit right", timeToHitRight)
+        //console.logValue("dx", dx)
+        //console.logValue("dvx", dvx)
+        if (timeToHitRight == NaN) {
+            timeToHitRight = Infinity
+        }
 
-        dy = Math.abs(spLastRight - plLastLeft)
-        dvy = Math.abs(sprite.vx - platform.vx)
-        let timeToHitLeft = dy / dvy
-        console.logValue("Time to hit left", timeToHitBottom)
+        dx = Math.abs(spLastRight - plLastLeft)
+        dvx = Math.abs(sprite.vx - platform.vx)
+        let timeToHitLeft = dx / dvx
+        //console.logValue("Time to hit left", timeToHitLeft)
+        //console.logValue("dx", dx)
+        //console.logValue("dvx", dvx)
+        if (timeToHitLeft == NaN) {
+            timeToHitLeft = Infinity
+        }
 
 
-        //FREEZES SPRITES IN PLACE
-        sprite.ay = 0
-        sprite.setVelocity(0, 0)
-        platform.setVelocity(0, 0)
-        //sprite.setPosition(spLastX, spLastY)
-        //platform.setPosition(plLastX, plLastY)
-        sprite.setFlag(SpriteFlag.GhostThroughSprites, true)
-        controller.moveSprite(sprite, 0, 0)
+        let shortestTime = Math.min(Math.min(timeToHitBottom, timeToHitTop), Math.min(timeToHitRight, timeToHitLeft))
+        if(shortestTime == timeToHitTop)
+        {
+            console.log("hitting top")
+            sprite.ay = 0
+            sprite.setVelocity(0, 0)
+            spritePlatformer.currentPlatform = platform
+            spritePlatformer.isOnPlatform = true
+            while(sprite.overlapsWith(platform))
+            {
+                sprite.y--
+            }
+        }
+        else if(shortestTime == timeToHitLeft)
+        {
+            console.log("hitting left")
+            sprite.vx = 0
+            while(sprite.overlapsWith(platform))
+            {
+                sprite.x-=2
+            }
+        }
+        else if(shortestTime == timeToHitRight)
+        {
+            console.log("hitting right")
+            sprite.vx = 0
+            while (sprite.overlapsWith(platform)) {
+                sprite.x+=2
+            }
+        }
+        else if(shortestTime == timeToHitBottom)
+        {
+            console.log("hitting bottom")
+            sprite.vx = 0
+            sprite.vy = 0
+            while (sprite.overlapsWith(platform)) {
+                sprite.top = platform.bottom
+            }
+        }
+        else
+        {
+            console.logValue("Time to hit right", timeToHitRight)
+            console.logValue("Time to hit left", timeToHitLeft)
+            console.logValue("Time to hit top", timeToHitTop)
+            console.logValue("Time to hit bottom", timeToHitBottom)
+            console.logValue("Shortest Time", shortestTime)
+            throw "this should never run"
+        }
     }
 
     game.onUpdate(function()
