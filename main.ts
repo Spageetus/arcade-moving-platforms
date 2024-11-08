@@ -2,16 +2,6 @@ namespace SpriteKind {
     export const Platform = SpriteKind.create()
 }
 
-namespace Helper
-{
-    export function distanceFrom(x1: number, y1: number, x2: number, y2: number)
-    {
-        let dx = x2-x1
-        let dy = y1-y2
-        return Math.sqrt(Math.pow(dx, 2) + Math.pow(dy, 2))
-    }
-}
-
 /**
  * Gives access to Platform functions
  */
@@ -163,13 +153,12 @@ namespace Platforms
         {
             throw "Sprite with id: " + sprite.id + " is not a Platformer"
         }
+
         // to determine where sprite hit platform, calculate which side was hit first
         // velocity ~= pixels/second
 
         //calculate sprite's position 1/20th second ago
         // t = d/v, d = v*t, v = d/t
-        //let spLastX = sprite.x + sprite.vx * -1/20
-        //let spLastY = sprite.y + sprite.vy * -1/20
 
         let spLastX = spritePlatformer.lastX
         let spLastY = spritePlatformer.lastY
@@ -271,7 +260,6 @@ namespace Platforms
                 }
                 loopCount++
             }
-            //sprite.right = platform.left
         }
         else if(shortestTime == timeToHitRight)
         {
@@ -287,14 +275,24 @@ namespace Platforms
                 }
                 loopCount++
             }
-            //sprite.left = platform.right
+
         }
         else if(shortestTime == timeToHitBottom)
         {
             console.log("hitting bottom")
             sprite.vx = 0
             sprite.vy = 0
-            sprite.top = platform.bottom
+            let loopCount = 0
+            while(sprite.overlapsWith(platform))
+            {
+                sprite.y+=2
+                if(loopCount > 20)
+                {
+                    sprite.top = platform.bottom
+                    break
+                }
+                loopCount++
+            }
         }
         else
         {
@@ -349,7 +347,7 @@ namespace Platforms
         }
     })
 
-    game.onUpdateInterval(1000/40,function()
+    game.onUpdateInterval(1000/40,function() //updates sprite's last position
     {
         if(allPlatformers == null)
         {
