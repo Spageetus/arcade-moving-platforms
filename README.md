@@ -7,7 +7,7 @@ This repository can be added as an **extension** in MakeCode.
 * open [https://arcade.makecode.com/](https://arcade.makecode.com/)
 * click on **New Project**
 * click on **Extensions** under the gearwheel menu
-* search for **https://github.com/spageetus/moving-platforms-extension** and import
+* search for **https://github.com/spageetus/arcade-moving-platforms** and import
 
 ## Example Project
 [https://arcade.makecode.com/S44692-94654-35064-22898](https://arcade.makecode.com/S44692-94654-35064-22898)
