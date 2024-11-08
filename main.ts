@@ -1,6 +1,10 @@
 namespace SpriteKind {
     export const Platform = SpriteKind.create()
 }
+
+/**
+ * Gives access to Platform functions
+ */
 //% color=190 weight=100 icon="\uf151" block="Platforms" advanced=true
 //% groups='["Create", "SpriteKind", "Behavior", "Collision", "others"]'
 namespace Platforms
@@ -11,6 +15,8 @@ namespace Platforms
         currentPlatform: Sprite = null
         sprite: Sprite = null
         gravity = 0
+        lastX = 0
+        lastY = 0
         constructor(sprite: Sprite)
         {
             this.sprite = sprite
@@ -19,6 +25,8 @@ namespace Platforms
             {
                 console.log("WARNING: sprite with id:" + sprite.id + " has a y acceleration of 0")
             }
+            this.lastX = sprite.x
+            this.lastY = sprite.y
         }
     }
 
@@ -49,6 +57,14 @@ namespace Platforms
             //SpriteKind.Platform = SpriteKind.Player-1
         }
         return sprites.create(img, SpriteKind.Platform)
+    }
+
+    function getSpritesPlatformer(sprite: Sprite) {
+        let spriteId = sprite.id
+        if (spriteId >= allPlatformers.length) {
+            return null
+        }
+        return allPlatformers[spriteId]
     }
 
     /**
@@ -125,53 +141,171 @@ namespace Platforms
     //% block="make %sprite=variables_get(mySprite) collide with %platform=variables_get(myPlatform)" group='others'
     //% blockid="platformCollisionHandler"
     //% group='Collision'
-    export function platformCollisionHandler(sprite: Sprite, platform: Sprite) //call function inside of overlap container
+    export function platformCollisionHandler(sprite: Sprite, platform: Sprite) //many inconstistancies, needs redoing
     {
-        if(platform.kind() != SpriteKind.Platform)
+        console.log("running")
+        if(platform.kind() != SpriteKind.Platform) //ensures that function is only called on sprite of Kind Platform
         {
-            console.log("Cannot ride non-Platform sprites")
-            return
+            throw "invalid SpriteKind. otherSprite must be of kind Platform"
         }
-        if (allPlatformers == null || sprite.id >= allPlatformers.length)
+        let spritePlatformer = getSpritesPlatformer(sprite)
+        if(spritePlatformer == null) //makes sure sprite is a platformer
         {
-            console.log("No platformers")
-            return
+            throw "Sprite with id: " + sprite.id + " is not a Platformer"
         }
-        let currentPlatformer = allPlatformers[sprite.id]
-        if(currentPlatformer == null)
+
+        // to determine where sprite hit platform, calculate which side was hit first
+        // velocity ~= pixels/second
+
+        //calculate sprite's position 1/20th second ago
+        // t = d/v, d = v*t, v = d/t
+
+        let spLastX = spritePlatformer.lastX
+        let spLastY = spritePlatformer.lastY
+
+        let plLastX = platform.x + platform.vx * -1/20
+        let plLastY = platform.y + platform.vy * -1/20
+
+        let spLastBottom = spLastY + sprite.height/2 //gets sprite's previous bottom
+        let plLastBottom = plLastY + platform.height/2 //gets platform's previous bottom
+        
+        let spLastTop = spLastY - sprite.height/2 //gets sprite's previous top
+        let plLastTop = plLastY - platform.height/2 //gets platform's previous top
+
+        let spLastRight = spLastX + sprite.width/2 //gets sprite's previous right
+        let plLastRight = plLastX + platform.width/2 //gets platform's previous right
+
+        let spLastLeft = spLastX - sprite.width/2 //gets sprite's previous left
+        let plLastLeft = plLastX - platform.width/2 //gets platform's previous left
+        console.logValue("last top", plLastTop)
+        console.logValue("last right", spLastRight)
+        console.logValue("last left", spLastLeft)
+        console.logValue("last bottom", spLastBottom)
+
+        let dy = Math.abs(spLastBottom - plLastTop)
+        let dvy = Math.abs(sprite.vy - platform.vy)
+        console.log(dvy)
+        let timeToHitTop = dy/dvy
+        console.logValue("Time to hit top", timeToHitTop)
+        console.logValue("dy", dy)
+        console.logValue("dvy", dvy)
+        if (Number.isNaN(timeToHitTop))
         {
-            console.log("Sprite with id: " + sprite.id + " is not a Platformer")
-            return
+            timeToHitTop = Infinity
         }
-        if (sprite.bottom <= platform.y - (platform.y - platform.top)/4) //hits top of platform
+
+        dy = Math.abs(spLastTop - plLastBottom)
+        dvy = Math.abs(sprite.vy - platform.vy)
+        let timeToHitBottom = dy/dvy
+        if (Number.isNaN(timeToHitBottom)) {
+            timeToHitBottom = Infinity
+        }
+        console.logValue("Time to hit bottom", timeToHitBottom)
+        console.logValue("dy", dy)
+        console.logValue("dvy", dvy)
+
+        let dx = Math.abs(spLastLeft - plLastRight)
+        let dvx = Math.abs(sprite.vx - platform.vx)
+        let timeToHitRight = dx / dvx
+        console.logValue("Time to hit right", timeToHitRight)
+        console.logValue("dx", dx)
+        console.logValue("dvx", dvx)
+        if (Number.isNaN(timeToHitRight)) {
+            timeToHitRight = Infinity
+        }
+
+        dx = Math.abs(spLastRight - plLastLeft)
+        dvx = Math.abs(sprite.vx - platform.vx)
+        let timeToHitLeft = dx / dvx
+        console.logValue("Time to hit left", timeToHitLeft)
+        console.logValue("dx", dx)
+        console.logValue("dvx", dvx)
+        if (Number.isNaN(timeToHitLeft)) {
+            timeToHitLeft = Infinity
+        }
+
+
+        let shortestTime = Math.min(Math.min(timeToHitBottom, timeToHitTop), Math.min(timeToHitRight, timeToHitLeft))
+        if(shortestTime == timeToHitTop)
         {
-            currentPlatformer.isOnPlatform = true
-            currentPlatformer.currentPlatform = platform
+            console.log("hitting top")
             sprite.ay = 0
-            sprite.vy = 0
+            sprite.setVelocity(0, 0)
+            spritePlatformer.currentPlatform = platform
+            spritePlatformer.isOnPlatform = true
             sprite.bottom = platform.top
-        }
-        else if (sprite.top >= platform.y) //hit bottom of tile
-        {
-            sprite.top = platform.bottom
-            sprite.vy = 0
-        }
-        if (sprite.right < platform.x) { //hits left side of platform
-            //sprite.right = platform.left
-            while (sprite.right < (platform.left + platform.x)/2 && sprite.overlapsWith(platform)) {
-                sprite.right -= 2
-            }
-        }
-        else if (sprite.left > platform.x) { //hits right side of platform
-            //sprite.left = platform.right
-            while(sprite.left > (platform.right + platform.x)/2 && sprite.overlapsWith(platform))
+            let loopCount = 0
+            while(sprite.overlapsWith(platform))
             {
-                sprite.left += 1
+                sprite.y-=1
+                if (loopCount > 20) //sprite is stuck between wall and platform
+                {
+                    sprite.bottom = platform.top
+                    break
+                }
+                loopCount++
             }
+        }
+        else if(shortestTime == timeToHitLeft)
+        {
+            console.log("hitting left")
+            sprite.vx = 0
+            let loopCount = 0
+            while(sprite.overlapsWith(platform))
+            {
+                sprite.x-=2
+                if (loopCount > 20) { //sprite is stuck between wall and platform
+                    sprite.right = platform.left
+                    break
+                }
+                loopCount++
+            }
+        }
+        else if(shortestTime == timeToHitRight)
+        {
+            console.log("hitting right")
+            sprite.vx = 0
+            let loopCount = 0
+            while (sprite.overlapsWith(platform)) {
+                sprite.x += 2
+                if (loopCount > 20) //sprite is stuck between wall and platform
+                {
+                    sprite.left = platform.right
+                    break
+                }
+                loopCount++
+            }
+
+        }
+        else if(shortestTime == timeToHitBottom)
+        {
+            console.log("hitting bottom")
+            sprite.vx = 0
+            sprite.vy = 0
+            let loopCount = 0
+            while(sprite.overlapsWith(platform))
+            {
+                sprite.y+=2
+                if(loopCount > 20)
+                {
+                    sprite.top = platform.bottom
+                    break
+                }
+                loopCount++
+            }
+        }
+        else
+        {
+            console.logValue("Time to hit right", timeToHitRight)
+            console.logValue("Time to hit left", timeToHitLeft)
+            console.logValue("Time to hit top", timeToHitTop)
+            console.logValue("Time to hit bottom", timeToHitBottom)
+            console.logValue("Shortest Time", shortestTime)
+            throw "this should never run. Logging debug info"
         }
     }
 
-    game.onUpdate(function()
+    game.onUpdate(function() //checks for sprites falling off platforms
     {
         if(allPlatformers == null) //stops dereferencing null error
         {
@@ -212,4 +346,22 @@ namespace Platforms
             }
         }
     })
+
+    game.onUpdateInterval(1000/40,function() //updates sprite's last position
+    {
+        if(allPlatformers == null)
+        {
+            return
+        }
+        for(let p of allPlatformers)
+        {
+            if(p != null && p.sprite != null)
+            {
+                p.lastX = p.sprite.x
+                p.lastY = p.sprite.y
+            }
+        }
+    })
 }
+
+
