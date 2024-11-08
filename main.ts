@@ -193,7 +193,7 @@ namespace Platforms
         console.logValue("Time to hit top", timeToHitTop)
         console.logValue("dy", dy)
         console.logValue("dvy", dvy)
-        if(timeToHitTop == NaN)
+        if (Number.isNaN(timeToHitTop))
         {
             timeToHitTop = Infinity
         }
@@ -201,7 +201,7 @@ namespace Platforms
         dy = Math.abs(spLastTop - plLastBottom)
         dvy = Math.abs(sprite.vy - platform.vy)
         let timeToHitBottom = dy/dvy
-        if (timeToHitBottom == NaN) {
+        if (Number.isNaN(timeToHitBottom)) {
             timeToHitBottom = Infinity
         }
         console.logValue("Time to hit bottom", timeToHitBottom)
@@ -214,7 +214,7 @@ namespace Platforms
         //console.logValue("Time to hit right", timeToHitRight)
         //console.logValue("dx", dx)
         //console.logValue("dvx", dvx)
-        if (timeToHitRight == NaN) {
+        if (Number.isNaN(timeToHitRight)) {
             timeToHitRight = Infinity
         }
 
@@ -224,7 +224,7 @@ namespace Platforms
         //console.logValue("Time to hit left", timeToHitLeft)
         //console.logValue("dx", dx)
         //console.logValue("dvx", dvx)
-        if (timeToHitLeft == NaN) {
+        if (Number.isNaN(timeToHitLeft)) {
             timeToHitLeft = Infinity
         }
 
