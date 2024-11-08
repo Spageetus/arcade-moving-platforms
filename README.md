@@ -10,7 +10,7 @@ This repository can be added as an **extension** in MakeCode.
 * search for **https://github.com/spageetus/arcade-moving-platforms** and import
 
 ## Example Project
-[https://arcade.makecode.com/S44692-94654-35064-22898](https://arcade.makecode.com/S44692-94654-35064-22898)
+[https://arcade.makecode.com/S45570-02103-58415-40345](https://arcade.makecode.com/S45570-02103-58415-40345)
 
 
 ## Edit this project ![Build status badge](https://github.com/spageetus/moving-platforms-extension/workflows/MakeCode/badge.svg)
