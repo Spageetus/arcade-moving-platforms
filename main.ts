@@ -162,13 +162,13 @@ namespace Platforms
         // to determine where sprite hit platform, calculate which side was hit first
         // velocity ~= pixels/second
 
-        //calculate sprite's position 1/10th second ago
+        //calculate sprite's position 1/16th second ago
         // t = d/v, d = v*t, v = d/t
-        let spLastX = sprite.x + sprite.vx * -1/16
-        let spLastY = sprite.y + sprite.vy * -1/16
+        let spLastX = sprite.x + sprite.vx * -1/20
+        let spLastY = sprite.y + sprite.vy * -1/20
 
-        let plLastX = platform.x + platform.vx * -1/16
-        let plLastY = platform.y + platform.vy * -1/16
+        let plLastX = platform.x + platform.vx * -1/20
+        let plLastY = platform.y + platform.vy * -1/20
 
         let spLastBottom = spLastY + sprite.height/2 //gets sprite's previous bottom
         let plLastBottom = plLastY + platform.height/2 //gets platform's previous bottom
@@ -180,7 +180,7 @@ namespace Platforms
         let plLastRight = plLastX + platform.width/2 //gets platform's previous right
 
         let spLastLeft = spLastX - sprite.width/2 //gets sprite's previous left
-        let plLastLeft = plLastX + platform.width/2 //gets platform's previous left
+        let plLastLeft = plLastX - platform.width/2 //gets platform's previous left
         //console.logValue("last top", plLastTop)
         //console.logValue("last right", spLastRight)
         //console.logValue("last left", spLastLeft)
@@ -211,9 +211,9 @@ namespace Platforms
         let dx = Math.abs(spLastLeft - plLastRight)
         let dvx = Math.abs(sprite.vx - platform.vx)
         let timeToHitRight = dx / dvx
-        //console.logValue("Time to hit right", timeToHitRight)
-        //console.logValue("dx", dx)
-        //console.logValue("dvx", dvx)
+        console.logValue("Time to hit right", timeToHitRight)
+        console.logValue("dx", dx)
+        console.logValue("dvx", dvx)
         if (Number.isNaN(timeToHitRight)) {
             timeToHitRight = Infinity
         }
@@ -221,9 +221,9 @@ namespace Platforms
         dx = Math.abs(spLastRight - plLastLeft)
         dvx = Math.abs(sprite.vx - platform.vx)
         let timeToHitLeft = dx / dvx
-        //console.logValue("Time to hit left", timeToHitLeft)
-        //console.logValue("dx", dx)
-        //console.logValue("dvx", dvx)
+        console.logValue("Time to hit left", timeToHitLeft)
+        console.logValue("dx", dx)
+        console.logValue("dvx", dvx)
         if (Number.isNaN(timeToHitLeft)) {
             timeToHitLeft = Infinity
         }
@@ -237,10 +237,7 @@ namespace Platforms
             sprite.setVelocity(0, 0)
             spritePlatformer.currentPlatform = platform
             spritePlatformer.isOnPlatform = true
-            while(sprite.overlapsWith(platform))
-            {
-                sprite.y--
-            }
+            sprite.bottom = platform.top
         }
         else if(shortestTime == timeToHitLeft)
         {
@@ -250,23 +247,23 @@ namespace Platforms
             {
                 sprite.x-=2
             }
+            //sprite.right = platform.left
         }
         else if(shortestTime == timeToHitRight)
         {
             console.log("hitting right")
             sprite.vx = 0
             while (sprite.overlapsWith(platform)) {
-                sprite.x+=2
+                sprite.x += 2
             }
+            //sprite.left = platform.right
         }
         else if(shortestTime == timeToHitBottom)
         {
             console.log("hitting bottom")
             sprite.vx = 0
             sprite.vy = 0
-            while (sprite.overlapsWith(platform)) {
-                sprite.top = platform.bottom
-            }
+            sprite.top = platform.bottom
         }
         else
         {
