@@ -25,6 +25,8 @@ namespace Platforms
         currentPlatform: Sprite = null
         sprite: Sprite = null
         gravity = 0
+        lastX = 0
+        lastY = 0
         constructor(sprite: Sprite)
         {
             this.sprite = sprite
@@ -33,6 +35,8 @@ namespace Platforms
             {
                 console.log("WARNING: sprite with id:" + sprite.id + " has a y acceleration of 0")
             }
+            this.lastX = sprite.x
+            this.lastY = sprite.y
         }
     }
 
@@ -162,10 +166,13 @@ namespace Platforms
         // to determine where sprite hit platform, calculate which side was hit first
         // velocity ~= pixels/second
 
-        //calculate sprite's position 1/16th second ago
+        //calculate sprite's position 1/20th second ago
         // t = d/v, d = v*t, v = d/t
-        let spLastX = sprite.x + sprite.vx * -1/20
-        let spLastY = sprite.y + sprite.vy * -1/20
+        //let spLastX = sprite.x + sprite.vx * -1/20
+        //let spLastY = sprite.y + sprite.vy * -1/20
+
+        let spLastX = spritePlatformer.lastX
+        let spLastY = spritePlatformer.lastY
 
         let plLastX = platform.x + platform.vx * -1/20
         let plLastY = platform.y + platform.vy * -1/20
@@ -181,14 +188,14 @@ namespace Platforms
 
         let spLastLeft = spLastX - sprite.width/2 //gets sprite's previous left
         let plLastLeft = plLastX - platform.width/2 //gets platform's previous left
-        //console.logValue("last top", plLastTop)
-        //console.logValue("last right", spLastRight)
-        //console.logValue("last left", spLastLeft)
-        //console.logValue("last bottom", spLastBottom)
+        console.logValue("last top", plLastTop)
+        console.logValue("last right", spLastRight)
+        console.logValue("last left", spLastLeft)
+        console.logValue("last bottom", spLastBottom)
 
         let dy = Math.abs(spLastBottom - plLastTop)
         let dvy = Math.abs(sprite.vy - platform.vy)
-        //console.log(dvy)
+        console.log(dvy)
         let timeToHitTop = dy/dvy
         console.logValue("Time to hit top", timeToHitTop)
         console.logValue("dy", dy)
@@ -238,14 +245,31 @@ namespace Platforms
             spritePlatformer.currentPlatform = platform
             spritePlatformer.isOnPlatform = true
             sprite.bottom = platform.top
+            let loopCount = 0
+            while(sprite.overlapsWith(platform))
+            {
+                sprite.y-=1
+                if (loopCount > 20) //sprite is stuck between wall and platform
+                {
+                    sprite.bottom = platform.top
+                    break
+                }
+                loopCount++
+            }
         }
         else if(shortestTime == timeToHitLeft)
         {
             console.log("hitting left")
             sprite.vx = 0
+            let loopCount = 0
             while(sprite.overlapsWith(platform))
             {
                 sprite.x-=2
+                if (loopCount > 20) { //sprite is stuck between wall and platform
+                    sprite.right = platform.left
+                    break
+                }
+                loopCount++
             }
             //sprite.right = platform.left
         }
@@ -253,8 +277,15 @@ namespace Platforms
         {
             console.log("hitting right")
             sprite.vx = 0
+            let loopCount = 0
             while (sprite.overlapsWith(platform)) {
                 sprite.x += 2
+                if (loopCount > 20) //sprite is stuck between wall and platform
+                {
+                    sprite.left = platform.right
+                    break
+                }
+                loopCount++
             }
             //sprite.left = platform.right
         }
@@ -272,11 +303,11 @@ namespace Platforms
             console.logValue("Time to hit top", timeToHitTop)
             console.logValue("Time to hit bottom", timeToHitBottom)
             console.logValue("Shortest Time", shortestTime)
-            throw "this should never run"
+            throw "this should never run. Logging debug info"
         }
     }
 
-    game.onUpdate(function()
+    game.onUpdate(function() //checks for sprites falling off platforms
     {
         if(allPlatformers == null) //stops dereferencing null error
         {
@@ -317,4 +348,22 @@ namespace Platforms
             }
         }
     })
+
+    game.onUpdateInterval(1000/40,function()
+    {
+        if(allPlatformers == null)
+        {
+            return
+        }
+        for(let p of allPlatformers)
+        {
+            if(p != null && p.sprite != null)
+            {
+                p.lastX = p.sprite.x
+                p.lastY = p.sprite.y
+            }
+        }
+    })
 }
+
+
